@@ -19,8 +19,8 @@ DDI (only if access is approved)
 ## Expected Structure
 ```text
 project/
-└── datasets/
-    └── ham10000/
+└── data/
+    └── HAM10000/
         ├── HAM10000_metadata.tab
         └── images/
             ├── ISIC_xxx.jpg
