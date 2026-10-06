@@ -1,1 +1,12 @@
+__pycache__/
+*.pyc
+venv/
+.venv/
+frontend/node_modules/
+artifacts/models/*
+artifacts/metrics/*
+artifacts/figures/*
+artifacts/tables/*
+artifacts/logs/*
+!artifacts/**/.gitkeep
 data/

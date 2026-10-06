@@ -5,6 +5,7 @@ Ordered prompts to drive autonomous implementation. Each references the governin
 ## 1. Scaffold
 > Create the repo structure in [REPO-SPEC.md](REPO-SPEC.md): `src/`, `frontend/`,
 > `artifacts/`, `report/`, `requirements.txt`, `.gitignore`, `README.md`.
+> Do not implement ML functionality yet.
 
 ## 2. Data Layer
 > Implement `src/data/` per [DATA-SPEC.md](DATA-SPEC.md): HAM10000/DDI datasets, binary label
