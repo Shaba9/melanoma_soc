@@ -7,7 +7,11 @@ from .loaders import (
     load_ham_metadata,
     split_ham,
 )
-from .transforms import get_preprocess_transform
+from .transforms import (
+    get_augmented_transform,
+    get_preprocess_transform,
+    get_train_transform,
+)
 
 __all__ = [
     "LesionDataset",
@@ -20,4 +24,6 @@ __all__ = [
     "build_ham_loaders",
     "build_ddi_loader",
     "get_preprocess_transform",
+    "get_augmented_transform",
+    "get_train_transform",
 ]
