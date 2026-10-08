@@ -7,7 +7,7 @@ Build a web-based computational imaging application using EfficientNet-B0, HAM10
 
 Refer to the documents in the /rubrics directory for guidelines on final report structure.
 
-Refer to the /data directory for the HAM10000 and DDI dataset structures.
+Refer to the /datasets directory for the HAM10000 and DDI dataset structures.
 
 ## Datasets
 ### HAM10000

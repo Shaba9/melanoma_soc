@@ -9,4 +9,4 @@ artifacts/figures/*
 artifacts/tables/*
 artifacts/logs/*
 !artifacts/**/.gitkeep
-data/
+datasets/

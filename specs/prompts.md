@@ -8,8 +8,10 @@ Ordered prompts to drive autonomous implementation. Each references the governin
 > Do not implement ML functionality yet.
 
 ## 2. Data Layer
-> Implement `src/data/` per [DATA-SPEC.md](DATA-SPEC.md): HAM10000/DDI datasets, binary label
+> Implement `src/data/` per [DATA-SPEC.md](DATA-SPEC.md): HAM10000/DDI datasets, binary label.
+> Create dataset loaders for HAM10000 and DDI.
 > mapping, skin-tone mapping, stratified lesion-safe split, preprocessing transforms.
+> Generate dataset validation reports.
 
 ## 3. Augmentation
 > Implement baseline and augmented transforms per [AUGMENTATION-SPEC.md](AUGMENTATION-SPEC.md).
