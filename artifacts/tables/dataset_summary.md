@@ -1,0 +1,7 @@
+| Dataset          |   Total Images |   Malignant |   Benign | Skin-tone breakdown   |
+|:-----------------|---------------:|------------:|---------:|:----------------------|
+| HAM10000 (train) |           8012 |         884 |     7128 | -                     |
+| HAM10000 (val)   |           2003 |         229 |     1774 | -                     |
+| DDI (Light)      |            208 |          49 |      159 | Light                 |
+| DDI (Medium)     |            241 |          74 |      167 | Medium                |
+| DDI (Dark)       |            207 |          48 |      159 | Dark                  |
