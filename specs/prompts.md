@@ -23,6 +23,7 @@ Ordered prompts to drive autonomous implementation. Each references the governin
 ## 5. Experiments
 > Implement `run_experiment.py --exp {baseline,augmented}` per [EXP-SPEC.md](EXP-SPEC.md):
 > train, select best, evaluate on DDI, save metrics JSON.
+> Support baseline and augmented modes.
 
 ## 6. Fairness
 > Implement per-skin-tone metrics and gap per [FAIRNESS-SPEC.md](FAIRNESS-SPEC.md).
