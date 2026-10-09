@@ -11,6 +11,7 @@ from argparse import ArgumentParser
 from src.evaluation import evaluate_experiment
 from src.fairness import compute_and_save_fairness
 from src.training import train_model
+from src.viz import figures, tables
 
 
 def run(experiment: str, epochs=None) -> None:
@@ -27,6 +28,12 @@ def run(experiment: str, epochs=None) -> None:
           f"fairness_gap(Light-Dark)={gap_str}")
 
 
+def refresh_artifacts() -> None:
+    """Regenerate figures and tables so the UI reflects the latest experiment runs."""
+    tables.generate_all()
+    figures.generate_all()
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     parser = ArgumentParser(description="Train and evaluate melanoma classifier experiments.")
@@ -38,3 +45,4 @@ if __name__ == "__main__":
     experiments = ["baseline", "augmented"] if args.exp == "all" else [args.exp]
     for exp in experiments:
         run(exp, args.epochs)
+    refresh_artifacts()

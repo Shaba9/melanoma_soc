@@ -27,6 +27,11 @@ def _load_fairness(experiment: str) -> dict:
     return json.loads((config.METRICS_DIR / f"{experiment}_fairness.json").read_text())
 
 
+def _available_experiments() -> list:
+    """Experiments that have saved metrics."""
+    return [e for e in EXPERIMENTS if (config.METRICS_DIR / f"{e}_metrics.json").exists()]
+
+
 def _round(value):
     return round(value, 3) if isinstance(value, (int, float)) else value
 
@@ -71,7 +76,9 @@ def table_metrics(experiment: str) -> pd.DataFrame:
 def table_skin_tone() -> pd.DataFrame:
     """Table 4: per-skin-tone metrics, one block per model."""
     rows = []
-    for exp in EXPERIMENTS:
+    for exp in _available_experiments():
+        if not (config.METRICS_DIR / f"{exp}_fairness.json").exists():
+            continue
         groups = _load_fairness(exp)["skin_tone"]
         for group in GROUPS:
             g = groups.get(group) or {}
@@ -90,7 +97,9 @@ def table_skin_tone() -> pd.DataFrame:
 def table_fairness_gap() -> pd.DataFrame:
     """Table 5: per-group accuracy and fairness gaps per model."""
     rows = []
-    for exp in EXPERIMENTS:
+    for exp in _available_experiments():
+        if not (config.METRICS_DIR / f"{exp}_fairness.json").exists():
+            continue
         fair = _load_fairness(exp)
         groups = fair["skin_tone"]
         rows.append({
@@ -117,8 +126,8 @@ def _save(df: pd.DataFrame, name: str):
 def generate_all():
     """Generate every table from saved metrics/metadata."""
     _save(table_dataset_summary(), "dataset_summary")
-    _save(table_metrics("baseline"), "baseline_metrics")
-    _save(table_metrics("augmented"), "augmented_metrics")
+    for exp in _available_experiments():
+        _save(table_metrics(exp), f"{exp}_metrics")
     _save(table_skin_tone(), "skin_tone_metrics")
     _save(table_fairness_gap(), "fairness_gap")
 

@@ -8,9 +8,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { getMetrics } from "../api";
+import { getMetrics, getExperiments, getFigures, figureUrl } from "../api";
 
-const EXPERIMENTS = ["augmented", "baseline"];
 const METRIC_FIELDS = [
   ["Accuracy", "accuracy"],
   ["Precision", "precision"],
@@ -21,10 +20,26 @@ const METRIC_FIELDS = [
 const TONES = ["Light", "Medium", "Dark"];
 
 export default function Metrics() {
+  const [experiments, setExperiments] = useState(["augmented", "baseline"]);
   const [exp, setExp] = useState("augmented");
   const [data, setData] = useState(null);
+  const [figures, setFigures] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getExperiments()
+      .then((d) => {
+        if (d.experiments?.length) {
+          setExperiments(d.experiments);
+          setExp((cur) => (d.experiments.includes(cur) ? cur : d.default));
+        }
+      })
+      .catch(() => {});
+    getFigures()
+      .then(setFigures)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -61,7 +76,7 @@ export default function Metrics() {
           value={exp}
           onChange={(e) => setExp(e.target.value)}
         >
-          {EXPERIMENTS.map((e) => (
+          {experiments.map((e) => (
             <option key={e} value={e}>{e}</option>
           ))}
         </select>
@@ -119,6 +134,20 @@ export default function Metrics() {
             Light−Dark fairness gap:{" "}
             <strong>{data.fairness_gap.toFixed(3)}</strong>
           </p>
+        </>
+      )}
+
+      {figures.length > 0 && (
+        <>
+          <h2>Experiment Figures</h2>
+          <div className="gallery">
+            {figures.map((fig) => (
+              <figure className="gallery-item" key={fig.name}>
+                <img src={figureUrl(fig.name)} alt={fig.title} loading="lazy" />
+                <figcaption>{fig.title}</figcaption>
+              </figure>
+            ))}
+          </div>
         </>
       )}
     </section>

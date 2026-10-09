@@ -1,11 +1,21 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useResult } from "../ResultContext";
 
 export default function Results() {
   const { result } = useResult();
   const navigate = useNavigate();
 
-  if (!result) return <Navigate to="/" replace />;
+  if (!result) {
+    return (
+      <section className="page">
+        <h1>Prediction Result</h1>
+        <p className="empty">
+          No analysis yet. Head to the{" "}
+          <Link to="/">Upload</Link> page to analyze a lesion image.
+        </p>
+      </section>
+    );
+  }
 
   const { prediction, probability, model, originalUrl, overlayUrl } = result;
   const isMalignant = prediction === "Malignant";

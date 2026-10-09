@@ -7,11 +7,12 @@ and cached in memory. Default served model is `augmented`.
 import io
 import json
 import logging
+from pathlib import Path
 
 import torch
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from PIL import Image, UnidentifiedImageError
 
 from .. import config
@@ -33,6 +34,16 @@ DEFAULT_MODEL = "augmented"
 VALID_MODELS = {"baseline", "augmented"}
 ALLOWED_CONTENT_TYPES = {"image/jpeg", "image/png"}
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024  # 10 MB
+
+# Human-readable captions for generated figures (FIGURE-SPEC.md).
+FIGURE_TITLES = {
+    "architecture.png": "Model Architecture",
+    "augmentation_examples.png": "Augmentation Examples",
+    "training_curves.png": "Training Curves",
+    "roc_curve.png": "ROC Curve (DDI)",
+    "confusion_matrices.png": "Confusion Matrices (DDI)",
+    "gradcam_examples.png": "Grad-CAM Examples",
+}
 
 app = FastAPI(title="Melanoma SOC API")
 app.add_middleware(
@@ -140,3 +151,32 @@ def metrics(exp: str = Query(DEFAULT_MODEL)) -> MetricsResponse:
         skin_tone=skin_tone,
         fairness_gap=data.get("fairness_gap", 0.0),
     )
+
+
+@app.get("/experiments")
+def experiments() -> dict:
+    """List experiments that have saved metrics (for UI toggles)."""
+    available = [m for m in sorted(VALID_MODELS)
+                 if (config.METRICS_DIR / f"{m}_metrics.json").exists()]
+    return {"experiments": available, "default": DEFAULT_MODEL}
+
+
+@app.get("/figures")
+def list_figures() -> dict:
+    """List generated figure PNGs available in `artifacts/figures/`."""
+    figures_dir = config.FIGURES_DIR
+    names = sorted(p.name for p in figures_dir.glob("*.png")) if figures_dir.exists() else []
+    items = [{"name": n, "title": FIGURE_TITLES.get(n, n)} for n in names]
+    return {"figures": items}
+
+
+@app.get("/figures/{name}")
+def get_figure(name: str) -> FileResponse:
+    """Serve a single figure PNG by filename (no path traversal)."""
+    # Reject any path separators or parent references.
+    if name != Path(name).name or not name.endswith(".png"):
+        raise HTTPException(status_code=400, detail="Invalid figure name.")
+    path = config.FIGURES_DIR / name
+    if not path.exists():
+        raise HTTPException(status_code=404, detail=f"Figure '{name}' not found.")
+    return FileResponse(path, media_type="image/png")

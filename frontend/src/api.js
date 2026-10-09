@@ -25,4 +25,18 @@ export async function getMetrics(exp = "augmented") {
   return data;
 }
 
+export async function getExperiments() {
+  const { data } = await client.get("/experiments");
+  return data;
+}
+
+export async function getFigures() {
+  const { data } = await client.get("/figures");
+  return data.figures;
+}
+
+export function figureUrl(name) {
+  return `${baseURL}/figures/${name}`;
+}
+
 export default client;

@@ -33,6 +33,11 @@ def _load_history(experiment: str) -> list:
     return json.loads(path.read_text())
 
 
+def _experiments_with(suffix: str) -> list:
+    """Experiments that have a given artifact (e.g. '_metrics.json')."""
+    return [e for e in EXPERIMENTS if (config.METRICS_DIR / f"{e}{suffix}").exists()]
+
+
 def figure_architecture():
     """Fig 1: EfficientNet-B0 pipeline diagram."""
     stages = [
@@ -69,8 +74,11 @@ def figure_augmentation():
 
 def figure_training_curves():
     """Fig 3: loss & F1 vs epoch (train vs val) for each experiment."""
+    exps = _experiments_with("_history.json")
+    if not exps:
+        return
     fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-    for exp in EXPERIMENTS:
+    for exp in exps:
         history = _load_history(exp)
         epochs = [h["epoch"] for h in history]
         color = COLORS[exp]
@@ -93,7 +101,7 @@ def figure_training_curves():
 def figure_roc():
     """Fig 4: ROC curves (baseline vs augmented) on DDI."""
     fig, ax = plt.subplots(figsize=(6, 6))
-    for exp in EXPERIMENTS:
+    for exp in _experiments_with("_metrics.json"):
         preds = _load_metrics(exp)["predictions"]
         labels, probs = preds["labels"], preds["probs"]
         if len(set(labels)) < 2:
@@ -111,8 +119,11 @@ def figure_roc():
 
 def figure_confusion_matrices():
     """Fig 5: 2x2 confusion matrices for baseline and augmented."""
-    fig, axes = plt.subplots(1, 2, figsize=(10, 5))
-    for ax, exp in zip(axes, EXPERIMENTS):
+    exps = _experiments_with("_metrics.json")
+    if not exps:
+        return
+    fig, axes = plt.subplots(1, len(exps), figsize=(5 * len(exps), 5), squeeze=False)
+    for ax, exp in zip(axes[0], exps):
         cm = np.array(_load_metrics(exp)["overall"]["confusion_matrix"])
         im = ax.imshow(cm, cmap="Blues")
         for i in range(cm.shape[0]):
@@ -131,7 +142,11 @@ def figure_confusion_matrices():
 def figure_gradcam():
     """Fig 6: Grad-CAM examples (delegates to the explainability module)."""
     from ..gradcam import generate_examples
-    out = generate_examples()
+    trained = [e for e in EXPERIMENTS if (config.MODELS_DIR / f"{e}_best.pt").exists()]
+    if not trained:
+        return None
+    experiment = "augmented" if "augmented" in trained else trained[0]
+    out = generate_examples(experiment)
     logger.info("Grad-CAM examples at %s", out)
     return out
 
