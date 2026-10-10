@@ -1,7 +1,7 @@
 | Metric    |   Value |
 |:----------|--------:|
-| Accuracy  |   0.753 |
-| Precision |   0.737 |
-| Recall    |   0.082 |
-| F1        |   0.147 |
-| ROC-AUC   |   0.628 |
+| Accuracy  |   0.745 |
+| Precision |   1     |
+| Recall    |   0.023 |
+| F1        |   0.046 |
+| ROC-AUC   |   0.554 |
