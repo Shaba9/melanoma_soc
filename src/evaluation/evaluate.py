@@ -7,6 +7,7 @@ import json
 import logging
 
 import torch
+from tqdm import tqdm
 
 from .. import config
 from ..data import build_ddi_loader, get_preprocess_transform
@@ -22,7 +23,8 @@ def run_inference(model, loader, device) -> dict:
     """Run inference over a loader; return labels, preds, P(Malignant), skin-tone groups."""
     model.eval()
     labels_all, preds_all, probs_all, tones = [], [], [], []
-    for images, labels, meta in loader:
+    for images, labels, meta in tqdm(loader, desc="Evaluating (DDI)",
+                                     unit="batch", leave=False):
         images = images.to(device)
         logits = model(images)
         probs = torch.softmax(logits, dim=1)[:, config.MALIGNANT]

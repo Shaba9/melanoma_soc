@@ -10,6 +10,7 @@ import torch
 import torch.nn as nn
 from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
+from tqdm import tqdm
 
 from .. import config
 from ..data import (
@@ -37,14 +38,16 @@ def get_device() -> torch.device:
     return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-def _run_epoch(model, loader, criterion, device, optimizer=None) -> dict:
+def _run_epoch(model, loader, criterion, device, optimizer=None, desc=None) -> dict:
     """Run one train (optimizer given) or eval epoch; return metrics incl. loss."""
     is_train = optimizer is not None
     model.train(is_train)
     total_loss, labels_all, preds_all, probs_all = 0.0, [], [], []
     grad_ctx = torch.enable_grad() if is_train else torch.no_grad()
+    seen = 0
+    progress = tqdm(loader, desc=desc, unit="batch", leave=False)
     with grad_ctx:
-        for images, labels, _ in loader:
+        for images, labels, _ in progress:
             images, labels = images.to(device), labels.to(device)
             if is_train:
                 optimizer.zero_grad()
@@ -59,6 +62,9 @@ def _run_epoch(model, loader, criterion, device, optimizer=None) -> dict:
             labels_all += labels.cpu().tolist()
             preds_all += preds.cpu().tolist()
             probs_all += probs.detach().cpu().tolist()
+            seen += images.size(0)
+            progress.set_postfix(loss=f"{total_loss / seen:.4f}",
+                                 imgs=f"{seen}/{len(loader.dataset)}")
     metrics = classification_metrics(labels_all, preds_all, probs_all)
     metrics["loss"] = total_loss / len(loader.dataset)
     return metrics
@@ -87,8 +93,10 @@ def train_model(experiment: str, augment: bool, epochs: int = config.EPOCHS,
 
     best_f1, best_state, best_val, no_improve, history = -1.0, None, None, 0, []
     for epoch in range(1, epochs + 1):
-        tr = _run_epoch(model, train_loader, criterion, device, optimizer)
-        va = _run_epoch(model, val_loader, criterion, device)
+        tr = _run_epoch(model, train_loader, criterion, device, optimizer,
+                        desc=f"Epoch {epoch}/{epochs} [train]")
+        va = _run_epoch(model, val_loader, criterion, device,
+                        desc=f"Epoch {epoch}/{epochs} [val]")
         scheduler.step(va["f1"])
         history.append({
             "epoch": epoch,

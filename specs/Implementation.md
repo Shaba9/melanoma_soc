@@ -41,6 +41,8 @@ Set seeds for `random`, `numpy`, `torch` (+ `cudnn.deterministic=True`).
 ## 5. Logging
 - Per-epoch train/val loss + metrics to stdout and `artifacts/logs/<exp>.log`.
 - Save `metrics.json` after evaluation.
+- Display a `tqdm` progress bar in the terminal during training and DDI evaluation
+  (both experiments) showing epoch/phase, batch and image progress, running loss, and ETA.
 
 ## 6. Error Handling (boundaries only)
 - Validate dataset paths exist at startup.
@@ -49,7 +51,7 @@ Set seeds for `random`, `numpy`, `torch` (+ `cudnn.deterministic=True`).
 
 ## 7. Dependencies
 `torch, torchvision, scikit-learn, numpy, pandas, matplotlib, pillow, pytorch-grad-cam,
-fastapi, uvicorn, python-multipart`. Pin in `requirements.txt`.
+fastapi, uvicorn, python-multipart, tqdm`. Pin in `requirements.txt`.
 
 ## 8. Testing (minimal)
 - Smoke test: build model, forward random tensor → shape (N,2).

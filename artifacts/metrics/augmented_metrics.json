@@ -2650,20 +2650,5 @@
       "Medium",
       "Medium"
     ]
-  },
-  "skin_tone": {
-    "Light": {
-      "accuracy": 0.7451923076923077,
-      "count": 208
-    },
-    "Medium": {
-      "accuracy": 0.7095435684647303,
-      "count": 241
-    },
-    "Dark": {
-      "accuracy": 0.7101449275362319,
-      "count": 207
-    }
-  },
-  "fairness_gap": 0.03504738015607578
+  }
 }

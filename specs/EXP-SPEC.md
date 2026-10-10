@@ -20,6 +20,10 @@ Two experiments with identical architecture/hyperparameters, differing only in a
 5. Compute overall and per-skin-tone metrics ([FAIRNESS-SPEC.md](FAIRNESS-SPEC.md)).
 6. Persist metrics JSON, training curves, ROC, confusion matrix.
 
+Throughout training and DDI evaluation (for both `baseline` and `augmented`), display a
+terminal progress bar (`tqdm`) showing epoch/phase, batch and image counts, and estimated
+time remaining so run progress is visible from the console.
+
 ## 3. Metrics (computed on DDI)
 - Accuracy, Precision, Recall, F1, ROC-AUC.
 - Confusion matrix (2×2).

@@ -31,6 +31,13 @@ passed to `CrossEntropyLoss(weight=...)`.
 - Save best model by validation F1 to `artifacts/models/<experiment>_best.pt`.
 - Save final metrics and config alongside the checkpoint.
 
+## 5.1 Training Progress Display
+- Show a terminal progress bar (`tqdm`) for every training and validation epoch of both
+  the `baseline` and `augmented` runs.
+- Each bar is labeled with the current epoch (`Epoch X/N [train|val]`) and reports batch
+  progress, images processed vs. total, running loss, iteration rate, and estimated time
+  remaining (ETA).
+
 ## 6. Two Models
 - `baseline`: trained per [AUGMENTATION-SPEC.md](AUGMENTATION-SPEC.md) with augmentation disabled.
 - `augmented`: trained with the augmentation pipeline enabled.
