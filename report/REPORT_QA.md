@@ -321,3 +321,11 @@ This was a solo project (no other team members). Tools and resources used:
   the DDI study.
 
 
+#References
+[1] H. Li, Y. Pan, J. Zhao, and L. Zhang, “Skin disease diagnosis with deep learning: a review,” 2020. [Online]. Available: https://arxiv.org/abs/2011.05627. 
+[2] N. Alipour, T. Burke, and J. Courtney, “Skin Type Diversity in Skin Lesion Datasets: A Review,” Current Dermatology Reports, vol. 13, no. 3, pp. 198-210, Aug. 2024, doi: 10.1007/s13671-024-00440-0. https://pmc.ncbi.nlm.nih.gov/articles/PMC11343783/. 
+[3] R. Fliorent et al., “Artificial Intelligence in dermatology: advancements and challenges in skin of color,” International Journal of Dermatology, vol. 63, no. 4, pp. 455-461, Apr. 2024, doi: 10.1111/ijd.17076. https://onlinelibrary.wiley.com/doi/10.1111/ijd.17076.
+[4] R. Daneshjou et al., “Disparities in dermatology AI performance on a diverse, curated clinical image set,” Science Advances, vol. 8, no. 32, Aug. 2022, doi: 10.1126/sciadv.abq6147. https://pmc.ncbi.nlm.nih.gov/articles/PMC9374341/. 
+[5] “DDI - Diverse Dermatology Images,” Center for Artificial Intelligence in Medicine & Imaging, 2024. https://doi.org/10.71718/kqee-3z39.
+
+[6] A. M. Scarlat, “The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions,” kaggledatasets, Dec. 2018, doi: 10.7910/DVN/DBW86T. https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DBW86T.
