@@ -12,7 +12,8 @@ training — only evaluated on DDI.
 
 ## 3. Photometric Augmentation ≠ Real SOC Data
 Color/brightness jitter approximates but does not replicate real skin-of-color imagery;
-it is a proxy, not ground-truth diversity.
+it is a proxy, not ground-truth diversity. ±0.2 only darkens up to ~20%, a weak proxy for
+true dark-skin appearance — worth noting as a limitation.
 
 ## 4. DDI Is Small
 Limited DDI size, especially per skin-tone group, yields high-variance fairness estimates;
