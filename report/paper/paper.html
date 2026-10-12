@@ -13,14 +13,17 @@ h2 { font-size: 10pt; text-transform: uppercase; text-align: center;
 h3 { font-size: 10pt; font-style: italic; margin: 8pt 0 3pt; font-weight: normal; }
 .content { column-count: 2; column-gap: 0.3in; text-align: justify; }
 p { margin: 0 0 5pt; }
-em { }
-img { max-width: 100%; display: block; margin: 6pt auto 2pt; }
+img { max-width: 100%; height: auto; }
+figure { break-inside: avoid; margin: 7pt 0 4pt; text-align: center; }
+figure img { display: block; margin: 0 auto; max-width: 100%; width: auto;
+             height: auto; max-height: 8.4in; }
+figcaption { font-size: 8.5pt; text-align: left; margin-top: 2pt; }
 table { border-collapse: collapse; width: 100%; font-size: 8.5pt; margin: 4pt 0 6pt; }
 th, td { border: 1px solid #000; padding: 2px 4px; text-align: right; }
 th:first-child, td:first-child { text-align: left; }
 hr { border: none; border-top: 1px solid #bbb; margin: 8pt 0; }
 strong { font-weight: bold; }
-figure, table, img { break-inside: avoid; }
+table { break-inside: avoid; }
 h2, h3 { break-after: avoid; }
 </style>
 <script>
@@ -167,9 +170,8 @@ is fine-tuned. Training uses class-weighted cross-entropy (inverse-frequency wei
 counter benign-heavy imbalance), the Adam optimizer (learning rate 1×10⁻⁴), and a
 <code>ReduceLROnPlateau</code> scheduler on validation F1. The best checkpoint is selected by validation
 F1, and training early-stops when validation F1 stops improving.</p>
-<p><img alt="Model architecture: preprocessing → EfficientNet-B0 backbone → 2-class head, with a Grad-CAM branch on the last convolutional block." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/architecture.png" />
-<strong>Fig. 1.</strong> End-to-end pipeline: image preprocessing, EfficientNet-B0 backbone, two-class
-head, and the Grad-CAM branch on the final convolutional block.</p>
+<figure class="fig"><img alt="Model architecture: preprocessing → EfficientNet-B0 backbone → 2-class head, with a Grad-CAM branch on the last convolutional block." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/architecture.png" /><figcaption><strong>Fig. 1.</strong> End-to-end pipeline: image preprocessing, EfficientNet-B0 backbone, two-class
+head, and the Grad-CAM branch on the final convolutional block.</figcaption></figure>
 <h3>C. Skin-Tone-Aware Augmentation</h3>
 <p>Augmentation is applied <strong>to the training set only</strong> in the augmented experiment, before
 normalization, in random order: <code>RandomHorizontalFlip(0.5)</code>, <code>RandomRotation(±20°)</code>, and
@@ -183,9 +185,8 @@ pixel values, $\bar{g}$ is mean luminance, and <code>gray</code> is the grayscal
 <p>Darkening arises specifically from a brightness factor $b<1$ (and, secondarily, reduced
 contrast/saturation), approximating darker-skin appearance in the absence of skin-tone labels
 in HAM10000. Representative outputs are shown in Fig. 2.</p>
-<p><img alt="Augmentation examples: one lesion under flip, rotation, and color jitter." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/augmentation_examples.png" />
-<strong>Fig. 2.</strong> One training lesion rendered under several augmentations (flip, rotation, color
-jitter).</p>
+<figure class="fig"><img alt="Augmentation examples: one lesion under flip, rotation, and color jitter." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/augmentation_examples.png" /><figcaption><strong>Fig. 2.</strong> One training lesion rendered under several augmentations (flip, rotation, color
+jitter).</figcaption></figure>
 <h3>D. Grad-CAM Explainability</h3>
 <p>Grad-CAM is computed on the last convolutional block (<code>model.features[-1]</code>). For a target
 class $c$ with activation maps $A^k$ (channel $k$), the gradient of the class score $y^c$ is
@@ -249,12 +250,9 @@ confusion matrices are shown in Fig. 4 and Fig. 5; training curves in Fig. 3.</p
 </tr>
 </tbody>
 </table>
-<p><img alt="Training and validation loss/F1 curves across epochs." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/training_curves.png" />
-<strong>Fig. 3.</strong> Training/validation loss and F1 across epochs.</p>
-<p><img alt="ROC curves on DDI for baseline and augmented models." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/roc_curve.png" />
-<strong>Fig. 4.</strong> ROC curves (DDI) for the baseline and augmented models.</p>
-<p><img alt="Confusion matrices on DDI for baseline and augmented models." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/confusion_matrices.png" />
-<strong>Fig. 5.</strong> Confusion matrices (DDI) for the baseline and augmented models.</p>
+<figure class="fig"><img alt="Training and validation loss/F1 curves across epochs." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/training_curves.png" /><figcaption><strong>Fig. 3.</strong> Training/validation loss and F1 across epochs.</figcaption></figure>
+<figure class="fig"><img alt="ROC curves on DDI for baseline and augmented models." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/roc_curve.png" /><figcaption><strong>Fig. 4.</strong> ROC curves (DDI) for the baseline and augmented models.</figcaption></figure>
+<figure class="fig"><img alt="Confusion matrices on DDI for baseline and augmented models." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/confusion_matrices.png" /><figcaption><strong>Fig. 5.</strong> Confusion matrices (DDI) for the baseline and augmented models.</figcaption></figure>
 <h3>B. Fairness Across Skin Tones</h3>
 <p>Per-group results are reported in Table III, and the fairness gaps in Table IV. Augmentation
 raised Light and Medium accuracy but <strong>lowered</strong> Dark accuracy (0.778 → 0.725). As a result,
@@ -366,9 +364,8 @@ rise for every group, consistent with the overall sensitivity gain.</p>
 <p>Grad-CAM overlays (Fig. 6) across skin tones and both classes confirm the model generally
 concentrates activation on the lesion region rather than surrounding skin or imaging artifacts,
 supporting that predictions are lesion-driven.</p>
-<p><img alt="Grad-CAM overlays across skin tones and classes." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/gradcam_examples.png" />
-<strong>Fig. 6.</strong> Grad-CAM examples across skin tones (Light/Medium/Dark) and classes
-(Benign/Malignant).</p>
+<figure class="fig"><img alt="Grad-CAM overlays across skin tones and classes." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/gradcam_examples.png" /><figcaption><strong>Fig. 6.</strong> Grad-CAM examples across skin tones (Light/Medium/Dark) and classes
+(Benign/Malignant).</figcaption></figure>
 <hr />
 <h2>VI. Discussion</h2>
 <p>Augmentation clearly improved the model's ability to <em>detect</em> malignancy: recall rose from

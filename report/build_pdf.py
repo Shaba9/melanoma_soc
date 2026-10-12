@@ -47,6 +47,17 @@ body = markdown.markdown(
 for i, blk in enumerate(math_blocks):
     body = body.replace(f"@@MATH{i}@@", blk)
 
+# Wrap each <img> and its caption (markdown emits both in one <p>) into a
+# <figure> so the caption stays with the image, and cap image height so the tall
+# Grad-CAM figure cannot overflow its column and overlap text.
+body = re.sub(
+    r"<p>(<img[^>]*?>)\s*(.*?)</p>",
+    lambda m: f'<figure class="fig">{m.group(1)}'
+              f'<figcaption>{m.group(2).strip()}</figcaption></figure>',
+    body,
+    flags=re.DOTALL,
+)
+
 CSS = """
 @page { size: Letter; margin: 0.75in 0.6in; }
 body { font-family: 'Times New Roman', Times, serif; font-size: 9.5pt;
@@ -60,14 +71,17 @@ h2 { font-size: 10pt; text-transform: uppercase; text-align: center;
 h3 { font-size: 10pt; font-style: italic; margin: 8pt 0 3pt; font-weight: normal; }
 .content { column-count: 2; column-gap: 0.3in; text-align: justify; }
 p { margin: 0 0 5pt; }
-em { }
-img { max-width: 100%; display: block; margin: 6pt auto 2pt; }
+img { max-width: 100%; height: auto; }
+figure { break-inside: avoid; margin: 7pt 0 4pt; text-align: center; }
+figure img { display: block; margin: 0 auto; max-width: 100%; width: auto;
+             height: auto; max-height: 8.4in; }
+figcaption { font-size: 8.5pt; text-align: left; margin-top: 2pt; }
 table { border-collapse: collapse; width: 100%; font-size: 8.5pt; margin: 4pt 0 6pt; }
 th, td { border: 1px solid #000; padding: 2px 4px; text-align: right; }
 th:first-child, td:first-child { text-align: left; }
 hr { border: none; border-top: 1px solid #bbb; margin: 8pt 0; }
 strong { font-weight: bold; }
-figure, table, img { break-inside: avoid; }
+table { break-inside: avoid; }
 h2, h3 { break-after: avoid; }
 """
 
