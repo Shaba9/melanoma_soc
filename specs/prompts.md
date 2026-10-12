@@ -44,8 +44,21 @@ Ordered prompts to drive autonomous implementation. Each references the governin
 
 ## 11. Report
 > Draft the IEEE report per [REPORT-SPEC.md](REPORT-SPEC.md) and
-> [IEEE-PAPER-SPEC.md](IEEE-PAPER-SPEC.md); embed figures/tables; include limitations and
-> team contribution statement.
+> [IEEE-PAPER-SPEC.md](IEEE-PAPER-SPEC.md); embed figures/tables; include limitations and an
+> acknowledgement statement.
+> - **Grading guidelines:** satisfy every rubric in [../report/rubrics/](../report/rubrics/)
+>   (Evaluation rubric of Project Report, IEEE publication example, and the IEEE report
+>   template) — treat these as the authoritative structure and scoring criteria.
+> - **Proposal:** incorporate content from
+>   [../report/Proposal-SOC_Image_Augmentation.pdf](../report/Proposal-SOC_Image_Augmentation.pdf),
+>   especially the **Motivation** and **Abstract** sections.
+> - **Answers:** incorporate all response content from
+>   [../report/REPORT_QA.md](../report/REPORT_QA.md) and
+>   [../report/LIMITATIONS.md](../report/LIMITATIONS.md).
+> - **Citations:** use IEEE-format in-text citations (e.g., `[1]`) and restrict the
+>   bibliography to the sources listed in the References section of
+>   [../report/REPORT_QA.md](../report/REPORT_QA.md) — do not introduce new references.
+> Generate final report as a Word document (.docx).
 
 ## Conventions
 - Follow [TRD.md](TRD.md) and [IMPLEMENTATION.md](IMPLEMENTATION.md).
