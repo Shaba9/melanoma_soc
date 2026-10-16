@@ -11,9 +11,10 @@ import markdown
 
 ROOT = Path(__file__).resolve().parent.parent
 REPORT = ROOT / "report"
-MD = REPORT / "paper.md"
-HTML = REPORT / "paper.html"
-PDF = REPORT / "paper.pdf"
+PAPER_DIR = REPORT / "paper"
+MD = PAPER_DIR / "paper.md"
+HTML = PAPER_DIR / "paper.html"
+PDF = PAPER_DIR / "paper.pdf"
 
 text = MD.read_text(encoding="utf-8")
 
@@ -58,6 +59,15 @@ body = re.sub(
     flags=re.DOTALL,
 )
 
+# Keep each table title with its table so the title cannot be orphaned at the
+# bottom of a column.
+body = re.sub(
+    r"(<p><strong>TABLE[^<]*</strong></p>)\s*(<table>.*?</table>)",
+    r'<div class="tablewrap">\1\2</div>',
+    body,
+    flags=re.DOTALL,
+)
+
 CSS = """
 @page { size: Letter; margin: 0.75in 0.6in; }
 body { font-family: 'Times New Roman', Times, serif; font-size: 9.5pt;
@@ -82,6 +92,7 @@ th:first-child, td:first-child { text-align: left; }
 hr { border: none; border-top: 1px solid #bbb; margin: 8pt 0; }
 strong { font-weight: bold; }
 table { break-inside: avoid; }
+.tablewrap { break-inside: avoid; }
 h2, h3 { break-after: avoid; }
 """
 

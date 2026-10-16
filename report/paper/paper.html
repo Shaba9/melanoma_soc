@@ -24,6 +24,7 @@ th:first-child, td:first-child { text-align: left; }
 hr { border: none; border-top: 1px solid #bbb; margin: 8pt 0; }
 strong { font-weight: bold; }
 table { break-inside: avoid; }
+.tablewrap { break-inside: avoid; }
 h2, h3 { break-after: avoid; }
 </style>
 <script>
@@ -35,10 +36,10 @@ window.MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
 <body>
 <div class="content">
 <h1>Improving Melanoma Classification Across Diverse Skin Tones Through Photometric Image Augmentation</h1>
-<br/>
-<p><strong>Author:</strong> Shaba Rahavi</p>
-<p><strong>Affiliation:</strong> Melanoma-SOC Project — Computational Imaging</p>
-<h2>Abstract</h2>—Automated melanoma classifiers can match dermatologist-level accuracy on
+<p><strong>Author:</strong> Shaba Rahavi
+<strong>Affiliation:</strong> Department of Biomedical Engineering, University of North Dakota</p>
+<h2>Abstract</h2>
+<p>Automated melanoma classifiers can match dermatologist-level accuracy on
 curated benchmarks, yet they frequently underperform on darker skin tones because public
 dermatology datasets lack skin-tone diversity. This work investigates whether skin-tone-aware
 photometric image augmentation can improve classification robustness and fairness without
@@ -106,13 +107,12 @@ focus on clinically relevant regions rather than artifacts.</p>
 <hr />
 <h2>III. Methods</h2>
 <h3>A. Datasets and Labels</h3>
-<p>HAM10000 is used for training/validation and DDI [4], [5] as a held-out test set — a
+<p>HAM10000 is used for training/validation and DDI [5] as a held-out test set — a
 deliberate train/test domain shift (dermoscopic → clinical photography). Labels are binarized
 to <strong>Benign</strong> vs <strong>Malignant</strong> (HAM10000 <code>dx == mel</code> → Malignant; DDI <code>malignant</code> field). DDI
 Fitzpatrick codes are mapped to three groups: Light (FST I–II), Medium (FST III–IV), and Dark
 (FST V–VI). Table I summarizes the splits.</p>
-<p><strong>TABLE I. Dataset Summary</strong></p>
-<table>
+<div class="tablewrap"><p><strong>TABLE I. Dataset Summary</strong></p><table>
 <thead>
 <tr>
 <th>Dataset</th>
@@ -159,7 +159,7 @@ Fitzpatrick codes are mapped to three groups: Light (FST I–II), Medium (FST II
 <td>FST V–VI</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Images are converted to RGB, resized to 224×224, and normalized with ImageNet statistics
 (mean [0.485, 0.456, 0.406], std [0.229, 0.224, 0.225]). The HAM10000 train/validation split
 is a stratified 80/20 split performed by <strong><code>lesion_id</code></strong> so that no lesion appears in both
@@ -214,8 +214,7 @@ regenerated deterministically from the pipeline.</p>
 extremely conservative — perfect precision but near-zero recall — whereas the augmented model
 trades some precision for much higher recall, F1, and ROC-AUC (Table II). ROC curves and
 confusion matrices are shown in Fig. 4 and Fig. 5; training curves in Fig. 3.</p>
-<p><strong>TABLE II. Overall DDI Metrics (Baseline vs Augmented)</strong></p>
-<table>
+<div class="tablewrap"><p><strong>TABLE II. Overall DDI Metrics (Baseline vs Augmented)</strong></p><table>
 <thead>
 <tr>
 <th>Metric</th>
@@ -250,7 +249,7 @@ confusion matrices are shown in Fig. 4 and Fig. 5; training curves in Fig. 3.</p
 <td style="text-align: right;">0.615</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <figure class="fig"><img alt="Training and validation loss/F1 curves across epochs." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/training_curves.png" /><figcaption><strong>Fig. 3.</strong> Training/validation loss and F1 across epochs.</figcaption></figure>
 <figure class="fig"><img alt="ROC curves on DDI for baseline and augmented models." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/roc_curve.png" /><figcaption><strong>Fig. 4.</strong> ROC curves (DDI) for the baseline and augmented models.</figcaption></figure>
 <figure class="fig"><img alt="Confusion matrices on DDI for baseline and augmented models." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/confusion_matrices.png" /><figcaption><strong>Fig. 5.</strong> Confusion matrices (DDI) for the baseline and augmented models.</figcaption></figure>
@@ -260,8 +259,7 @@ raised Light and Medium accuracy but <strong>lowered</strong> Dark accuracy (0.7
 the overall max–min spread narrowed (0.077 → 0.049), but the primary Light–Dark gap did not
 improve and in fact became positive (−0.013 → +0.049). Per-group recall/F1 (Table III) did
 rise for every group, consistent with the overall sensitivity gain.</p>
-<p><strong>TABLE III. Per-Skin-Tone Metrics</strong></p>
-<table>
+<div class="tablewrap"><p><strong>TABLE III. Per-Skin-Tone Metrics</strong></p><table>
 <thead>
 <tr>
 <th>Model</th>
@@ -329,9 +327,8 @@ rise for every group, consistent with the overall sensitivity gain.</p>
 <td style="text-align: right;">0.149</td>
 </tr>
 </tbody>
-</table>
-<p><strong>TABLE IV. Fairness Gap (Accuracy by Group)</strong></p>
-<table>
+</table></div>
+<div class="tablewrap"><p><strong>TABLE IV. Fairness Gap (Accuracy by Group)</strong></p><table>
 <thead>
 <tr>
 <th>Model</th>
@@ -360,7 +357,7 @@ rise for every group, consistent with the overall sensitivity gain.</p>
 <td style="text-align: right;">0.049</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>C. Explainability</h3>
 <p>Grad-CAM overlays (Fig. 6) across skin tones and both classes confirm the model generally
 concentrates activation on the lesion region rather than surrounding skin or imaging artifacts,
@@ -390,20 +387,27 @@ lower than the study's HAM10000 baseline (0.67), attributable to a different arc
 sampling, early stopping, and different preprocessing/decision thresholds.</p>
 <hr />
 <h2>VII. Limitations</h2>
-<ul>
-<li><strong>Different source datasets.</strong> HAM10000 (train) and DDI (test) differ in acquisition,
-  population, and label distribution; cross-dataset shift affects absolute metrics.</li>
-<li><strong>No skin-tone labels in HAM10000.</strong> Fairness cannot be optimized during training, only
-  evaluated on DDI.</li>
-<li><strong>Photometric augmentation ≠ real SOC data.</strong> Color/brightness jitter approximates but does
-  not replicate real skin-of-color imagery. The ±0.2 range only darkens up to ~20%, a weak
-  proxy for true dark-skin appearance.</li>
-<li><strong>DDI is small.</strong> Limited per-group counts (≈207–241) yield high-variance fairness estimates.</li>
-<li><strong>Grad-CAM is localization, not segmentation.</strong> Heatmaps indicate influential regions, not
-  precise lesion boundaries, and are not a diagnostic segmentation.</li>
-<li><strong>Research-only.</strong> This is not a medical device; outputs must not be used for clinical
-  diagnosis. Results also reflect a single seed and CPU-limited training.</li>
-</ul>
+<p>Several factors limit the scope and interpretation of these results. The most
+fundamental is that the training and test data come from different sources:
+HAM10000 provides dermoscopic training images while DDI provides clinical
+photographs, and the two differ in acquisition, patient population, and label
+distribution. This cross-dataset shift depresses absolute metrics and means the
+reported numbers reflect generalization difficulty as much as model quality. A
+related constraint is that HAM10000 carries no skin-tone labels, so fairness
+cannot be optimized during training and can only be evaluated afterward on DDI.</p>
+<p>The augmentation strategy is itself a limitation. Photometric jitter approximates
+but does not replicate real skin-of-color imagery: it alters pixel intensities
+without changing lesion morphology or the characteristics of genuine clinical
+photography of darker skin. In particular, the ±0.2 brightness range only darkens
+an image by up to roughly 20%, a weak proxy for true dark-skin appearance.
+Evaluation is further constrained by the small size of DDI, whose per-group counts
+(roughly 207–241 images) yield high-variance fairness estimates, and by the fact
+that all results reflect a single random seed and CPU-limited training.</p>
+<p>Finally, the explainability and intended use carry caveats. Grad-CAM provides
+localization rather than segmentation: its heatmaps indicate influential regions,
+not precise lesion boundaries, and should not be read as a diagnostic mask. The
+entire system is research-only; it is not a medical device, and its outputs must
+not be used for clinical diagnosis.</p>
 <hr />
 <h2>VIII. Conclusion and Future Work</h2>
 <p>This project asked whether skin-tone-aware image augmentation can improve melanoma
@@ -413,12 +417,13 @@ detection (F1 and ROC-AUC) and narrowed the max–min per-group accuracy spread,
 reduce the targeted Light–Dark gap. The hypothesis is therefore only partially supported:
 photometric augmentation helps robustness but is insufficient, on its own, to close skin-tone
 fairness gaps — consistent with prior findings that representative data is the key lever [4].</p>
-<p>Future work: fine-tune on genuinely diverse data (as in [4]) or synthesize dark-skin imagery;
-apply stronger/targeted augmentation with Mixup; run multiple seeds with confidence intervals;
-train on the full dataset with GPU acceleration; and explore fairness-aware objectives
-(e.g., GroupDRO, CORAL). A promising direction is adopting datasets that provide pixel-level
-lesion masks (e.g., ISIC/PH2) so that <strong>segmentation</strong> can replace Grad-CAM for more precise
-lesion localization and potentially more robust classification.</p>
+<p>Future work could fine-tune on genuinely diverse data (as in [4]) or synthesize dark-skin
+imagery, apply stronger or more targeted augmentation such as Mixup, run multiple seeds with
+confidence intervals, train on the full dataset with GPU acceleration, and explore
+fairness-aware objectives such as GroupDRO or CORAL. A promising direction is adopting
+datasets that provide pixel-level lesion masks (e.g., ISIC/PH2) so that <strong>segmentation</strong> can
+replace Grad-CAM for more precise lesion localization and potentially more robust
+classification.</p>
 <hr />
 <h2>Acknowledgment</h2>
 <p>This was a solo project with no additional team members. The author used <strong>Claude (Anthropic)</strong>

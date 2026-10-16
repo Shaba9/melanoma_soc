@@ -271,18 +271,29 @@ sampling, early stopping, and different preprocessing/decision thresholds.
 
 ## VII. Limitations
 
-- **Different source datasets.** HAM10000 (train) and DDI (test) differ in acquisition,
-  population, and label distribution; cross-dataset shift affects absolute metrics.
-- **No skin-tone labels in HAM10000.** Fairness cannot be optimized during training, only
-  evaluated on DDI.
-- **Photometric augmentation ≠ real SOC data.** Color/brightness jitter approximates but does
-  not replicate real skin-of-color imagery. The ±0.2 range only darkens up to ~20%, a weak
-  proxy for true dark-skin appearance.
-- **DDI is small.** Limited per-group counts (≈207–241) yield high-variance fairness estimates.
-- **Grad-CAM is localization, not segmentation.** Heatmaps indicate influential regions, not
-  precise lesion boundaries, and are not a diagnostic segmentation.
-- **Research-only.** This is not a medical device; outputs must not be used for clinical
-  diagnosis. Results also reflect a single seed and CPU-limited training.
+Several factors limit the scope and interpretation of these results. The most
+fundamental is that the training and test data come from different sources:
+HAM10000 provides dermoscopic training images while DDI provides clinical
+photographs, and the two differ in acquisition, patient population, and label
+distribution. This cross-dataset shift depresses absolute metrics and means the
+reported numbers reflect generalization difficulty as much as model quality. A
+related constraint is that HAM10000 carries no skin-tone labels, so fairness
+cannot be optimized during training and can only be evaluated afterward on DDI.
+
+The augmentation strategy is itself a limitation. Photometric jitter approximates
+but does not replicate real skin-of-color imagery: it alters pixel intensities
+without changing lesion morphology or the characteristics of genuine clinical
+photography of darker skin. In particular, the ±0.2 brightness range only darkens
+an image by up to roughly 20%, a weak proxy for true dark-skin appearance.
+Evaluation is further constrained by the small size of DDI, whose per-group counts
+(roughly 207–241 images) yield high-variance fairness estimates, and by the fact
+that all results reflect a single random seed and CPU-limited training.
+
+Finally, the explainability and intended use carry caveats. Grad-CAM provides
+localization rather than segmentation: its heatmaps indicate influential regions,
+not precise lesion boundaries, and should not be read as a diagnostic mask. The
+entire system is research-only; it is not a medical device, and its outputs must
+not be used for clinical diagnosis.
 
 ---
 
@@ -296,12 +307,13 @@ reduce the targeted Light–Dark gap. The hypothesis is therefore only partially
 photometric augmentation helps robustness but is insufficient, on its own, to close skin-tone
 fairness gaps — consistent with prior findings that representative data is the key lever [4].
 
-Future work: fine-tune on genuinely diverse data (as in [4]) or synthesize dark-skin imagery;
-apply stronger/targeted augmentation with Mixup; run multiple seeds with confidence intervals;
-train on the full dataset with GPU acceleration; and explore fairness-aware objectives
-(e.g., GroupDRO, CORAL). A promising direction is adopting datasets that provide pixel-level
-lesion masks (e.g., ISIC/PH2) so that **segmentation** can replace Grad-CAM for more precise
-lesion localization and potentially more robust classification.
+Future work could fine-tune on genuinely diverse data (as in [4]) or synthesize dark-skin
+imagery, apply stronger or more targeted augmentation such as Mixup, run multiple seeds with
+confidence intervals, train on the full dataset with GPU acceleration, and explore
+fairness-aware objectives such as GroupDRO or CORAL. A promising direction is adopting
+datasets that provide pixel-level lesion masks (e.g., ISIC/PH2) so that **segmentation** can
+replace Grad-CAM for more precise lesion localization and potentially more robust
+classification.
 
 ---
 
