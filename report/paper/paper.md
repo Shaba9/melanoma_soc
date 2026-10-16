@@ -1,9 +1,11 @@
-# Improving Melanoma Classification Across Diverse Skin Tones Through Skin-Tone-Aware Image Augmentation
+# Improving Melanoma Classification Across Diverse Skin Tones Through Photometric Image Augmentation
 
-**Author:** Sharon Rahavi
-**Affiliation:** Melanoma-SOC Project — Computational Imaging
+**Author:** Shaba Rahavi
+**Affiliation:** Department of Biomedical Engineering, University of North Dakota
 
-*Abstract*—Automated melanoma classifiers can match dermatologist-level accuracy on
+## Abstract
+
+Automated melanoma classifiers can match dermatologist-level accuracy on
 curated benchmarks, yet they frequently underperform on darker skin tones because public
 dermatology datasets lack skin-tone diversity. This work investigates whether skin-tone-aware
 photometric image augmentation can improve classification robustness and fairness without
@@ -88,7 +90,7 @@ focus on clinically relevant regions rather than artifacts.
 
 ### A. Datasets and Labels
 
-HAM10000 [6] is used for training/validation and DDI [4], [5] as a held-out test set — a
+HAM10000 is used for training/validation and DDI [5] as a held-out test set — a
 deliberate train/test domain shift (dermoscopic → clinical photography). Labels are binarized
 to **Benign** vs **Malignant** (HAM10000 `dx == mel` → Malignant; DDI `malignant` field). DDI
 Fitzpatrick codes are mapped to three groups: Light (FST I–II), Medium (FST III–IV), and Dark
@@ -106,7 +108,7 @@ Fitzpatrick codes are mapped to three groups: Light (FST I–II), Medium (FST II
 
 Images are converted to RGB, resized to 224×224, and normalized with ImageNet statistics
 (mean [0.485, 0.456, 0.406], std [0.229, 0.224, 0.225]). The HAM10000 train/validation split
-is a stratified 80/20 split performed **by `lesion_id`** so that no lesion appears in both
+is a stratified 80/20 split performed by **`lesion_id`** so that no lesion appears in both
 splits (preventing leakage), with seed 42.
 
 ### B. Model and Training
@@ -310,7 +312,7 @@ as an AI coding assistant for implementation, debugging, and drafting; **GitHub*
 control; **PyTorch/torchvision** for the model, training, and augmentation (EfficientNet-B0 with
 ImageNet weights); **scikit-learn** for evaluation metrics; **FastAPI/Uvicorn** and
 **React/Vite** for the web application; and **matplotlib/pandas** for figures and tables. The
-work uses the publicly available HAM10000 [6] and DDI [4], [5] datasets.
+work uses the publicly available HAM10000 [6] and DDI [5] datasets.
 
 ---
 
