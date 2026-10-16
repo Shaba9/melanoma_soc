@@ -267,33 +267,63 @@ lower than the study's HAM10000 baseline (0.67), attributable to a different arc
 (EfficientNet-B0 vs Inception V3), a single seed, class-weighted loss versus balanced
 sampling, early stopping, and different preprocessing/decision thresholds.
 
+An additional observation comes from the Grad-CAM visualizations. While several Light-skin
+examples show model attention concentrated around the lesion itself, some Medium- and
+Dark-skin examples exhibit activations that are partially displaced from the lesion region and
+extend into surrounding skin or background structures. This suggests that the model may not
+always localize diagnostically relevant features consistently across skin-tone groups.
+Although the number of Grad-CAM examples is too small to draw definitive conclusions,
+inconsistent localization could help explain why fairness improvements were limited despite
+improvements in overall sensitivity. If the model learns different visual cues for different
+skin-tone groups, performance disparities may persist even when overall classification metrics
+improve.
+
 ---
 
 ## VII. Limitations
 
-Several factors limit the scope and interpretation of these results. The most
-fundamental is that the training and test data come from different sources:
-HAM10000 provides dermoscopic training images while DDI provides clinical
-photographs, and the two differ in acquisition, patient population, and label
-distribution. This cross-dataset shift depresses absolute metrics and means the
-reported numbers reflect generalization difficulty as much as model quality. A
-related constraint is that HAM10000 carries no skin-tone labels, so fairness
-cannot be optimized during training and can only be evaluated afterward on DDI.
+Several factors limit the scope and interpretation of these results.
 
-The augmentation strategy is itself a limitation. Photometric jitter approximates
-but does not replicate real skin-of-color imagery: it alters pixel intensities
-without changing lesion morphology or the characteristics of genuine clinical
-photography of darker skin. In particular, the ±0.2 brightness range only darkens
-an image by up to roughly 20%, a weak proxy for true dark-skin appearance.
-Evaluation is further constrained by the small size of DDI, whose per-group counts
-(roughly 207–241 images) yield high-variance fairness estimates, and by the fact
-that all results reflect a single random seed and CPU-limited training.
+The most fundamental limitation is that the training and test data come from different sources.
+HAM10000 consists primarily of dermoscopic images, whereas DDI contains clinical photographs.
+These datasets differ in acquisition conditions, image quality, patient populations, and label
+distributions. Consequently, the reported performance reflects both classifier quality and the
+difficulty of cross-dataset generalization.
 
-Finally, the explainability and intended use carry caveats. Grad-CAM provides
-localization rather than segmentation: its heatmaps indicate influential regions,
-not precise lesion boundaries, and should not be read as a diagnostic mask. The
-entire system is research-only; it is not a medical device, and its outputs must
-not be used for clinical diagnosis.
+A second limitation is the absence of skin-tone labels in HAM10000. Because skin-tone
+information is unavailable during training, the model cannot explicitly learn fairness-aware
+representations or be optimized for equitable performance across demographic groups. Fairness
+can only be assessed afterward using DDI.
+
+The augmentation strategy itself is also limited. Photometric jitter modifies pixel intensities
+but does not reproduce the anatomical, textural, and photographic characteristics of genuine
+skin-of-color clinical images. In particular, the ±0.2 brightness adjustment used in this
+project darkens images only modestly and may not adequately represent the appearance
+variability observed in real-world dermatology datasets. As a result, augmentation serves only
+as a weak proxy for true dataset diversity.
+
+An additional limitation is revealed by the Grad-CAM visualizations. Although many examples
+show attention focused on lesion regions, several Medium- and Dark-skin examples exhibit
+activation patterns that are partially shifted away from the lesion and into surrounding skin
+or unrelated image regions. These observations suggest that lesion localization may be less
+consistent across skin-tone groups. Because accurate classification depends on identifying
+clinically relevant structures, inconsistent localization could contribute to the remaining
+fairness gap and may help explain why augmentation improved overall metrics while failing to
+consistently improve Dark-group performance. The current analysis includes only a small number
+of explainability examples, so this interpretation should be considered exploratory rather than
+conclusive.
+
+Evaluation is further constrained by the relatively small size of DDI. Each skin-tone subgroup
+contains only approximately 200–240 images, which increases the variance of subgroup
+performance estimates and makes fairness metrics sensitive to small numbers of classification
+errors. In addition, all experiments were performed using a single random seed and CPU-limited
+training, preventing a more comprehensive statistical analysis.
+
+Finally, Grad-CAM itself has limitations as an explainability tool. Its heatmaps indicate
+influential image regions but do not provide precise lesion boundaries and should not be
+interpreted as segmentation masks. The system is intended solely for research purposes and is
+not a medical device. Its predictions should not be used for clinical diagnosis or treatment
+decisions.
 
 ---
 
