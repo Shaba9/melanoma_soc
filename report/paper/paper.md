@@ -352,28 +352,20 @@ work uses the publicly available HAM10000 [6] and DDI [5] datasets.
 
 ## References
 
-[1] H. Li, Y. Pan, J. Zhao, and L. Zhang, "Skin disease diagnosis with deep learning: a
-review," 2020. [Online]. Available: https://arxiv.org/abs/2011.05627.
+[1] H. Li, Y. Pan, J. Zhao, and L. Zhang, "Skin disease diagnosis with deep learning: a review," 2020. [Online]. Available: https://arxiv.org/abs/2011.05627.
 
-[2] N. Alipour, T. Burke, and J. Courtney, "Skin Type Diversity in Skin Lesion Datasets: A
-Review," *Current Dermatology Reports*, vol. 13, no. 3, pp. 198–210, Aug. 2024, doi:
-10.1007/s13671-024-00440-0.
+[2] N. Alipour, T. Burke, and J. Courtney, "Skin Type Diversity in Skin Lesion Datasets: A Review," *Current Dermatology Reports*, vol. 13, no. 3, pp. 198–210, Aug. 2024, doi: 10.1007/s13671-024-00440-0. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC11343783/.
 
-[3] R. Fliorent et al., "Artificial Intelligence in dermatology: advancements and challenges
-in skin of color," *International Journal of Dermatology*, vol. 63, no. 4, pp. 455–461, Apr.
-2024, doi: 10.1111/ijd.17076.
+[3] R. Fliorent et al., "Artificial Intelligence in dermatology: advancements and challenges in skin of color," *International Journal of Dermatology*, vol. 63, no. 4, pp. 455–461, Apr. 2024, doi: 10.1111/ijd.17076. [Online]. Available: https://onlinelibrary.wiley.com/doi/10.1111/ijd.17076.
 
 [4] R. Daneshjou et al., "Disparities in dermatology AI performance on a diverse, curated
-clinical image set," *Science Advances*, vol. 8, no. 32, Aug. 2022, doi:
-10.1126/sciadv.abq6147.
+clinical image set," *Science Advances*, vol. 8, no. 32, Aug. 2022, doi: 10.1126/sciadv.abq6147. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC9374341/.
 
-[5] "DDI — Diverse Dermatology Images," Center for Artificial Intelligence in Medicine &
-Imaging, 2024. doi: 10.71718/kqee-3z39.
+[5] "DDI — Diverse Dermatology Images," Center for Artificial Intelligence in Medicine & Imaging, 2024. doi: 10.71718/kqee-3z39. [Online]. Available: https://doi.org/10.71718/kqee-3z39.
 
-[6] A. M. Scarlat, "The HAM10000 dataset, a large collection of multi-source dermatoscopic
-images of common pigmented skin lesions," *kaggledatasets*, Dec. 2018, doi: 10.7910/DVN/DBW86T.
+[6] A. M. Scarlat, "The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions," *kaggledatasets*, Dec. 2018, doi: 10.7910/DVN/DBW86T. [Online]. Available: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DBW86T.
 
-[7] S. Suara, A. Jha, P. Sinha, and S. Arif Ahmed, “Is Grad-CAM Explainable in Medical Images?,” July 20, 2023. doi: 10.1007/978-3-031-58181-6_11.
+[7] S. Suara, A. Jha, P. Sinha, and S. Arif Ahmed, “Is Grad-CAM Explainable in Medical Images?,” July 20, 2023. doi: 10.1007/978-3-031-58181-6_11. [Online]. Available: https://arxiv.org/pdf/2307.10506v1.
 
 [8] M. Tan and Q. Le, “EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks,” 2019. Accessed: Oct. 16, 2026. [Online]. Available: http://proceedings.mlr.press/v97/tan19a/tan19a.pdf.
 

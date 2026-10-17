@@ -441,7 +441,7 @@ detection (F1 and ROC-AUC) and narrowed the max–min per-group accuracy spread,
 reduce the targeted Light–Dark gap. The hypothesis is therefore only partially supported:
 photometric augmentation helps robustness but is insufficient, on its own, to close skin-tone
 fairness gaps — consistent with prior findings that representative data is the key lever [4].</p>
-<p>Future work could fine-tune on genuinely diverse data (as in [4]), apply stronger augmentation techniques such as Mixup, run multiple random seeds with confidence intervals, train on the full dataset with GPU acceleration, and investigate domain-adaptation approaches such as Deep CORAL [10] to reduce the distribution shift between HAM10000 and DDI. Fairness-aware optimization methods such as GroupDRO [11] may also be explored if skin-tone labels become available during training. Another promising direction is adopting datasets with pixel-level lesion masks, such as ISIC and PH2, to support segmentation-based approaches rather than Grad-CAM-only localization [12].</p>
+<p>Future work could fine-tune on genuinely diverse data (as in [4]), apply stronger augmentation techniques, run multiple random seeds with confidence intervals, train on the full dataset with GPU acceleration, and investigate domain-adaptation approaches such as Deep CORAL [10] to reduce the distribution shift between HAM10000 and DDI. Fairness-aware optimization methods such as GroupDRO [11] may also be explored if skin-tone labels become available during training. Another promising direction is adopting datasets with pixel-level lesion masks, such as ISIC and PH2, to support segmentation-based approaches rather than Grad-CAM-only localization [12].</p>
 <hr />
 <h2>Acknowledgment</h2>
 <p>This was a solo project with no additional team members. The author used <strong>Claude (Anthropic)</strong>
@@ -452,22 +452,14 @@ ImageNet weights); <strong>scikit-learn</strong> for evaluation metrics; <strong
 work uses the publicly available HAM10000 [6] and DDI [5] datasets.</p>
 <hr />
 <h2>References</h2>
-<p>[1] H. Li, Y. Pan, J. Zhao, and L. Zhang, "Skin disease diagnosis with deep learning: a
-review," 2020. [Online]. Available: https://arxiv.org/abs/2011.05627.</p>
-<p>[2] N. Alipour, T. Burke, and J. Courtney, "Skin Type Diversity in Skin Lesion Datasets: A
-Review," <em>Current Dermatology Reports</em>, vol. 13, no. 3, pp. 198–210, Aug. 2024, doi:
-10.1007/s13671-024-00440-0.</p>
-<p>[3] R. Fliorent et al., "Artificial Intelligence in dermatology: advancements and challenges
-in skin of color," <em>International Journal of Dermatology</em>, vol. 63, no. 4, pp. 455–461, Apr.
-2024, doi: 10.1111/ijd.17076.</p>
+<p>[1] H. Li, Y. Pan, J. Zhao, and L. Zhang, "Skin disease diagnosis with deep learning: a review," 2020. [Online]. Available: https://arxiv.org/abs/2011.05627.</p>
+<p>[2] N. Alipour, T. Burke, and J. Courtney, "Skin Type Diversity in Skin Lesion Datasets: A Review," <em>Current Dermatology Reports</em>, vol. 13, no. 3, pp. 198–210, Aug. 2024, doi: 10.1007/s13671-024-00440-0. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC11343783/.</p>
+<p>[3] R. Fliorent et al., "Artificial Intelligence in dermatology: advancements and challenges in skin of color," <em>International Journal of Dermatology</em>, vol. 63, no. 4, pp. 455–461, Apr. 2024, doi: 10.1111/ijd.17076. [Online]. Available: https://onlinelibrary.wiley.com/doi/10.1111/ijd.17076.</p>
 <p>[4] R. Daneshjou et al., "Disparities in dermatology AI performance on a diverse, curated
-clinical image set," <em>Science Advances</em>, vol. 8, no. 32, Aug. 2022, doi:
-10.1126/sciadv.abq6147.</p>
-<p>[5] "DDI — Diverse Dermatology Images," Center for Artificial Intelligence in Medicine &amp;
-Imaging, 2024. doi: 10.71718/kqee-3z39.</p>
-<p>[6] A. M. Scarlat, "The HAM10000 dataset, a large collection of multi-source dermatoscopic
-images of common pigmented skin lesions," <em>kaggledatasets</em>, Dec. 2018, doi: 10.7910/DVN/DBW86T.</p>
-<p>[7] S. Suara, A. Jha, P. Sinha, and S. Arif Ahmed, “Is Grad-CAM Explainable in Medical Images?,” July 20, 2023. doi: 10.1007/978-3-031-58181-6_11.</p>
+clinical image set," <em>Science Advances</em>, vol. 8, no. 32, Aug. 2022, doi: 10.1126/sciadv.abq6147. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC9374341/.</p>
+<p>[5] "DDI — Diverse Dermatology Images," Center for Artificial Intelligence in Medicine &amp; Imaging, 2024. doi: 10.71718/kqee-3z39. [Online]. Available: https://doi.org/10.71718/kqee-3z39.</p>
+<p>[6] A. M. Scarlat, "The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions," <em>kaggledatasets</em>, Dec. 2018, doi: 10.7910/DVN/DBW86T. [Online]. Available: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DBW86T.</p>
+<p>[7] S. Suara, A. Jha, P. Sinha, and S. Arif Ahmed, “Is Grad-CAM Explainable in Medical Images?,” July 20, 2023. doi: 10.1007/978-3-031-58181-6_11. [Online]. Available: https://arxiv.org/pdf/2307.10506v1.</p>
 <p>[8] M. Tan and Q. Le, “EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks,” 2019. Accessed: Oct. 16, 2026. [Online]. Available: http://proceedings.mlr.press/v97/tan19a/tan19a.pdf.</p>
 <p>[9] L. Fei-Fei, J. Deng, and K. Li, “ImageNet: Constructing a Large-Scale Image Database,” Journal of Vision, vol. 9, no. 8, pp. 1037–1037, Mar. 2010, doi: 10.1167/9.8.1037.[Online]. Available: http://image-net.org/static_files/papers/imagenet_cvpr09.pdf.</p>
 <p>[10] S. Sagawa, P. W. Koh, T. B. Hashimoto, and P. Liang, "Distributionally Robust Neural Networks for Group Shifts: On the Importance of Regularization for Worst-Case Generalization," ICLR, 2020. [Online]. Available: https://openreview.net/pdf?id=ryxGuJrFvS.</p>
