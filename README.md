@@ -23,3 +23,6 @@ uvicorn src.api.main:app --reload
 cd frontend
 npm install
 npm run dev
+
+## Paper
+.\.venv\Scripts\python.exe report\build_pdf.py

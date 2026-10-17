@@ -82,7 +82,7 @@ data closes the gap [4].
 
 **Explainability.** Grad-CAM produces class-discriminative localization maps from a trained
 classifier without extra labels, and is widely used to confirm that medical-imaging models
-focus on clinically relevant regions rather than artifacts.
+focus on clinically relevant regions rather than artifacts [7].
 
 ---
 
@@ -112,9 +112,7 @@ is a stratified 80/20 split performed by **`lesion_id`** so that no lesion appea
 splits (preventing leakage), with seed 42.
 
 ### B. Model and Training
-
-The classifier is EfficientNet-B0 initialized with ImageNet weights, with its final layer
-replaced by a two-class head, `Linear(1280 → 2)` (Fig. 1). Only the head is new; the backbone
+The classifier is EfficientNet-B0 [8], initialized with weights pretrained on the ImageNet dataset [9], which enables transfer learning by leveraging visual features such as edges, textures, shapes, and color patterns learned from millions of labeled natural images. The final classification layer was then replaced with a two-class head, Linear(1280 → 2), and fine-tuned for benign-versus-malignant skin lesion classification (Fig. 1). Only the head is new; the backbone
 is fine-tuned. Training uses class-weighted cross-entropy (inverse-frequency weights to
 counter benign-heavy imbalance), the Adam optimizer (learning rate 1×10⁻⁴), and a
 `ReduceLROnPlateau` scheduler on validation F1. The best checkpoint is selected by validation
@@ -337,13 +335,7 @@ reduce the targeted Light–Dark gap. The hypothesis is therefore only partially
 photometric augmentation helps robustness but is insufficient, on its own, to close skin-tone
 fairness gaps — consistent with prior findings that representative data is the key lever [4].
 
-Future work could fine-tune on genuinely diverse data (as in [4]) or synthesize dark-skin
-imagery, apply stronger or more targeted augmentation such as Mixup, run multiple seeds with
-confidence intervals, train on the full dataset with GPU acceleration, and explore
-fairness-aware objectives such as GroupDRO or CORAL. A promising direction is adopting
-datasets that provide pixel-level lesion masks (e.g., ISIC/PH2) so that **segmentation** can
-replace Grad-CAM for more precise lesion localization and potentially more robust
-classification.
+Future work could fine-tune on genuinely diverse data (as in [4]), apply stronger augmentation techniques, run multiple random seeds with confidence intervals, train on the full dataset with GPU acceleration, and investigate domain-adaptation approaches such as Deep CORAL [10] to reduce the distribution shift between HAM10000 and DDI. Fairness-aware optimization methods such as GroupDRO [11] may also be explored if skin-tone labels become available during training. Another promising direction is adopting datasets with pixel-level lesion masks, such as ISIC and PH2, to support segmentation-based approaches rather than Grad-CAM-only localization [12].
 
 ---
 
@@ -380,3 +372,15 @@ Imaging, 2024. doi: 10.71718/kqee-3z39.
 
 [6] A. M. Scarlat, "The HAM10000 dataset, a large collection of multi-source dermatoscopic
 images of common pigmented skin lesions," *kaggledatasets*, Dec. 2018, doi: 10.7910/DVN/DBW86T.
+
+[7] S. Suara, A. Jha, P. Sinha, and S. Arif Ahmed, “Is Grad-CAM Explainable in Medical Images?,” July 20, 2023. doi: 10.1007/978-3-031-58181-6_11.
+
+[8] M. Tan and Q. Le, “EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks,” 2019. Accessed: Oct. 16, 2026. [Online]. Available: http://proceedings.mlr.press/v97/tan19a/tan19a.pdf.
+
+[9] L. Fei-Fei, J. Deng, and K. Li, “ImageNet: Constructing a Large-Scale Image Database,” Journal of Vision, vol. 9, no. 8, pp. 1037–1037, Mar. 2010, doi: 10.1167/9.8.1037.[Online]. Available: http://image-net.org/static_files/papers/imagenet_cvpr09.pdf.
+
+[10] S. Sagawa, P. W. Koh, T. B. Hashimoto, and P. Liang, "Distributionally Robust Neural Networks for Group Shifts: On the Importance of Regularization for Worst-Case Generalization," ICLR, 2020. [Online]. Available: https://openreview.net/pdf?id=ryxGuJrFvS.
+
+[11] B. Sun and K. Saenko, “Deep CORAL: Correlation Alignment for Deep Domain Adaptation,” July 06, 2016. Accessed: Oct. 17, 2026. [Online]. Available: https://arxiv.org/pdf/1607.01719.
+
+[12] R. Bai and M. Zhou, “SL-HarDNet: Skin Lesion Segmentation With HarDNet,” Front Bioeng Biotechnol, vol. 10, p. 1028690, Jan. 2023, doi: 10.3389/fbioe.2022.1028690. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC9849244.
