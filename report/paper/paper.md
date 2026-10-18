@@ -5,7 +5,7 @@
 
 ## Abstract
 
-Automated melanoma classifiers can match dermatologist-level accuracy on
+*Automated melanoma classifiers can match dermatologist-level accuracy on
 curated benchmarks, yet they frequently underperform on darker skin tones because public
 dermatology datasets lack skin-tone diversity. This work investigates whether skin-tone-aware
 photometric image augmentation can improve classification robustness and fairness without
@@ -18,7 +18,7 @@ explainability. On DDI, augmentation improved malignant detection (F1 0.046 → 
 0.554 → 0.615) and narrowed the maximum–minimum per-group accuracy spread (0.077 → 0.049),
 but it did not reduce the Light-versus-Dark accuracy gap. The results suggest photometric
 augmentation is a weak proxy for genuinely diverse training data and that fairness gains most
-likely require representative images rather than synthetic color perturbation.
+likely require representative images rather than synthetic color perturbation.*
 
 *Index Terms*—melanoma classification, skin-tone fairness, data augmentation, EfficientNet,
 Grad-CAM, computational imaging, medical image analysis.
@@ -47,42 +47,37 @@ Recent work shows that state-of-the-art dermatology AI models perform worse on d
 clinical image sets containing darker skin tones, and that fine-tuning with more
 representative data reduces this gap [4]. This suggests improving dataset diversity may be as
 important as improving the model itself. Rather than developing a new classifier, this project
-investigates whether **skin-tone-aware image augmentation** — generating realistic variation
+investigates whether skin-tone-aware image augmentation — generating realistic variation
 in skin pigmentation and imaging conditions while preserving lesion characteristics — can
 improve melanoma classification across skin-tone subgroups.
 
 ### B. Contributions
 
-1. A reproducible cross-dataset pipeline that fine-tunes EfficientNet-B0 on HAM10000 and
-   evaluates on the skin-tone-labeled DDI benchmark.
-2. A controlled comparison of a baseline versus a photometrically augmented model on both
-   overall performance and per-skin-tone fairness.
-3. Grad-CAM–based explainability to verify the model attends to lesions, and a web
-   application for interactive inference and results visualization.
+This work makes three contributions. First, it provides a reproducible cross-dataset pipeline
+that fine-tunes EfficientNet-B0 on HAM10000 and evaluates on the skin-tone-labeled DDI
+benchmark. Second, it offers a controlled comparison of a baseline versus a photometrically
+augmented model on both overall performance and per-skin-tone fairness. Third, it uses
+Grad-CAM–based explainability to verify that the model attends to lesions rather than
+surrounding skin or imaging artifacts.
 
 ---
 
 ## II. Related Work
 
-**CNNs for skin-lesion classification.** Deep CNNs trained on dermoscopic datasets have
-achieved dermatologist-comparable accuracy for melanoma recognition [1]. The HAM10000 dataset
-[6] has become a standard training corpus of multi-source dermatoscopic images with
-biopsy-confirmed malignancies.
-
-**Dataset bias and skin-tone diversity.** Reviews of skin-lesion datasets show pervasive
-under-representation of darker skin tones, limiting fairness evaluation [2]. Broader analyses
-of AI in dermatology for skin of color highlight both the promise and the persistent
-challenges of equitable performance [3].
-
-**Fairness evaluation by skin tone.** The Diverse Dermatology Images (DDI) benchmark [4], [5]
-was curated specifically to expose these disparities. It is biopsy-confirmed and matched
-across Fitzpatrick skin types, and demonstrates that leading models — including one trained on
+Deep CNNs trained on dermoscopic datasets have achieved dermatologist-comparable accuracy for
+melanoma recognition [1], and the HAM10000 dataset [6] has become a standard training corpus
+of multi-source dermatoscopic images with biopsy-confirmed malignancies. Despite this
+progress, reviews of skin-lesion datasets show pervasive under-representation of darker skin
+tones, which limits fairness evaluation [2], and broader analyses of AI in dermatology for
+skin of color highlight both the promise and the persistent challenges of equitable
+performance [3]. The Diverse Dermatology Images (DDI) benchmark [4], [5] was curated
+specifically to expose these disparities; it is biopsy-confirmed and matched across
+Fitzpatrick skin types, and demonstrates that leading models — including one trained on
 HAM10000 — lose substantial ROC-AUC on Fitzpatrick V–VI skin, while fine-tuning on diverse
-data closes the gap [4].
-
-**Explainability.** Grad-CAM produces class-discriminative localization maps from a trained
-classifier without extra labels, and is widely used to confirm that medical-imaging models
-focus on clinically relevant regions rather than artifacts [7].
+data closes the gap [4]. To interpret model behavior, Grad-CAM produces class-discriminative
+localization maps from a trained classifier without extra labels, and is widely used to
+confirm that medical-imaging models focus on clinically relevant regions rather than artifacts
+[7].
 
 ---
 
@@ -92,7 +87,7 @@ focus on clinically relevant regions rather than artifacts [7].
 
 HAM10000 is used for training/validation and DDI [5] as a held-out test set — a
 deliberate train/test domain shift (dermoscopic → clinical photography). Labels are binarized
-to **Benign** vs **Malignant** (HAM10000 `dx == mel` → Malignant; DDI `malignant` field). DDI
+to Benign vs Malignant (HAM10000 `dx == mel` → Malignant; DDI `malignant` field). DDI
 Fitzpatrick codes are mapped to three groups: Light (FST I–II), Medium (FST III–IV), and Dark
 (FST V–VI). Table I summarizes the splits.
 
@@ -108,7 +103,7 @@ Fitzpatrick codes are mapped to three groups: Light (FST I–II), Medium (FST II
 
 Images are converted to RGB, resized to 224×224, and normalized with ImageNet statistics
 (mean [0.485, 0.456, 0.406], std [0.229, 0.224, 0.225]). The HAM10000 train/validation split
-is a stratified 80/20 split performed by **`lesion_id`** so that no lesion appears in both
+is a stratified 80/20 split performed by `lesion_id` so that no lesion appears in both
 splits (preventing leakage), with seed 42.
 
 ### B. Model and Training
@@ -124,7 +119,7 @@ head, and the Grad-CAM branch on the final convolutional block.
 
 ### C. Skin-Tone-Aware Augmentation
 
-Augmentation is applied **to the training set only** in the augmented experiment, before
+Augmentation is applied to the training set only in the augmented experiment, before
 normalization, in random order: `RandomHorizontalFlip(0.5)`, `RandomRotation(±20°)`, and
 `ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1)`. The color operations
 sample factors from uniform ranges and transform the image as follows, where `in`/`out` are
@@ -163,8 +158,8 @@ over the input as $(1-\alpha)\,\text{image} + \alpha\,\text{jet}(L^c)$ with $\al
 
 ## IV. Experimental Setup
 
-Two experiments are run with identical evaluation: **baseline** (preprocessing-only training)
-and **augmented** (Section III-C). Both are trained on HAM10000 and evaluated on all 656 DDI
+Two experiments are run with identical evaluation: baseline (preprocessing-only training)
+and augmented (Section III-C). Both are trained on HAM10000 and evaluated on all 656 DDI
 images. Hyperparameters: batch size 32, Adam learning rate 1×10⁻⁴, seed 42, up to 15 epochs
 with early stopping on validation F1. With batch size 32, one epoch is 251 training batches
 (8012 images) and 63 validation batches (2003 images). Metrics are Accuracy, Precision,
@@ -206,7 +201,7 @@ confusion matrices are shown in Fig. 4 and Fig. 5; training curves in Fig. 3.
 ### B. Fairness Across Skin Tones
 
 Per-group results are reported in Table III, and the fairness gaps in Table IV. Augmentation
-raised Light and Medium accuracy but **lowered** Dark accuracy (0.778 → 0.725). As a result,
+raised Light and Medium accuracy but lowered Dark accuracy (0.778 → 0.725). As a result,
 the overall max–min spread narrowed (0.077 → 0.049), but the primary Light–Dark gap did not
 improve and in fact became positive (−0.013 → +0.049). Per-group recall/F1 (Table III) did
 rise for every group, consistent with the overall sensitivity gain.
@@ -250,7 +245,7 @@ accuracy on a benign-heavy test set while being clinically useless; augmentation
 more balanced operating point.
 
 The fairness picture is mixed. The max–min accuracy spread narrowed, but the targeted
-Light–Dark accuracy gap did **not** improve — Dark-group accuracy actually fell even though
+Light–Dark accuracy gap did not improve — Dark-group accuracy actually fell even though
 Dark-group recall and F1 increased. This apparent tension is a consequence of the benign-heavy
 class balance: accuracy and sensitivity move differently as the decision threshold shifts. The
 most plausible explanation is that photometric jitter changes pixel intensities but not lesion
@@ -258,7 +253,7 @@ morphology or the characteristics of real skin-of-color clinical photography, so
 proxy for genuine diversity.
 
 This aligns with the DDI study [4], where the large fairness gains came specifically from
-**fine-tuning on diverse DDI data** (HAM10000 Light/Dark ROC-AUC rising to ≈0.77/0.78), not
+fine-tuning on diverse DDI data (HAM10000 Light/Dark ROC-AUC rising to ≈0.77/0.78), not
 from color augmentation of a non-diverse corpus. Our augmented model never trains on DDI, so
 it should not be expected to reproduce those gains. Our baseline DDI ROC-AUC (0.554) is also
 lower than the study's HAM10000 baseline (0.67), attributable to a different architecture
@@ -330,7 +325,7 @@ decisions.
 This project asked whether skin-tone-aware image augmentation can improve melanoma
 classification across diverse skin tones. Using EfficientNet-B0 trained on HAM10000 and
 evaluated on the skin-tone-labeled DDI benchmark, augmentation improved overall malignant
-detection (F1 and ROC-AUC) and narrowed the max–min per-group accuracy spread, but did **not**
+detection (F1 and ROC-AUC) and narrowed the max–min per-group accuracy spread, but did not
 reduce the targeted Light–Dark gap. The hypothesis is therefore only partially supported:
 photometric augmentation helps robustness but is insufficient, on its own, to close skin-tone
 fairness gaps — consistent with prior findings that representative data is the key lever [4].
@@ -341,12 +336,11 @@ Future work could fine-tune on genuinely diverse data (as in [4]), apply stronge
 
 ## Acknowledgment
 
-This was a solo project with no additional team members. The author used **Claude (Anthropic)**
-as an AI coding assistant for implementation, debugging, and drafting; **GitHub** for version
-control; **PyTorch/torchvision** for the model, training, and augmentation (EfficientNet-B0 with
-ImageNet weights); **scikit-learn** for evaluation metrics; **FastAPI/Uvicorn** and
-**React/Vite** for the web application; and **matplotlib/pandas** for figures and tables. The
-work uses the publicly available HAM10000 [6] and DDI [5] datasets.
+This was a solo project with no additional team members. The author used Claude (Anthropic)
+as an AI coding assistant for implementation, debugging, and drafting; GitHub for version
+control; PyTorch/torchvision for the model, training, and augmentation (EfficientNet-B0 with
+ImageNet weights); scikit-learn for evaluation metrics; and matplotlib/pandas for figures and
+tables. The work uses the publicly available HAM10000 [6] and DDI [5] datasets.
 
 ---
 
