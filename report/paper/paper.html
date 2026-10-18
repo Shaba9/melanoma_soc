@@ -74,42 +74,38 @@ carry real clinical consequences, motivating the need for more equitable dermato
 clinical image sets containing darker skin tones, and that fine-tuning with more
 representative data reduces this gap [4]. This suggests improving dataset diversity may be as
 important as improving the model itself. Rather than developing a new classifier, this project
-investigates whether <strong>skin-tone-aware image augmentation</strong> — generating realistic variation
+investigates whether skin-tone-aware image augmentation — generating realistic variation
 in skin pigmentation and imaging conditions while preserving lesion characteristics — can
 improve melanoma classification across skin-tone subgroups.</p>
 <h3>B. Contributions</h3>
-<ol>
-<li>A reproducible cross-dataset pipeline that fine-tunes EfficientNet-B0 on HAM10000 and
-   evaluates on the skin-tone-labeled DDI benchmark.</li>
-<li>A controlled comparison of a baseline versus a photometrically augmented model on both
-   overall performance and per-skin-tone fairness.</li>
-<li>Grad-CAM–based explainability to verify the model attends to lesions, and a web
-   application for interactive inference and results visualization.</li>
-</ol>
+<p>This work makes three contributions. First, it provides a reproducible cross-dataset pipeline
+that fine-tunes EfficientNet-B0 on HAM10000 and evaluates on the skin-tone-labeled DDI
+benchmark. Second, it offers a controlled comparison of a baseline versus a photometrically
+augmented model on both overall performance and per-skin-tone fairness. Third, it uses
+Grad-CAM–based explainability to verify that the model attends to lesions rather than
+surrounding skin or imaging artifacts.</p>
 <hr />
 <h2>II. Related Work</h2>
-<p><strong>CNNs for skin-lesion classification.</strong> Deep CNNs trained on dermoscopic datasets have
-achieved dermatologist-comparable accuracy for melanoma recognition [1]. The HAM10000 dataset
-[6] has become a standard training corpus of multi-source dermatoscopic images with
-biopsy-confirmed malignancies.</p>
-<p><strong>Dataset bias and skin-tone diversity.</strong> Reviews of skin-lesion datasets show pervasive
-under-representation of darker skin tones, limiting fairness evaluation [2]. Broader analyses
-of AI in dermatology for skin of color highlight both the promise and the persistent
-challenges of equitable performance [3].</p>
-<p><strong>Fairness evaluation by skin tone.</strong> The Diverse Dermatology Images (DDI) benchmark [4], [5]
-was curated specifically to expose these disparities. It is biopsy-confirmed and matched
-across Fitzpatrick skin types, and demonstrates that leading models — including one trained on
+<p>Deep CNNs trained on dermoscopic datasets have achieved dermatologist-comparable accuracy for
+melanoma recognition [1], and the HAM10000 dataset [6] has become a standard training corpus
+of multi-source dermatoscopic images with biopsy-confirmed malignancies. Despite this
+progress, reviews of skin-lesion datasets show pervasive under-representation of darker skin
+tones, which limits fairness evaluation [2], and broader analyses of AI in dermatology for
+skin of color highlight both the promise and the persistent challenges of equitable
+performance [3]. The Diverse Dermatology Images (DDI) benchmark [4], [5] was curated
+specifically to expose these disparities; it is biopsy-confirmed and matched across
+Fitzpatrick skin types, and demonstrates that leading models — including one trained on
 HAM10000 — lose substantial ROC-AUC on Fitzpatrick V–VI skin, while fine-tuning on diverse
-data closes the gap [4].</p>
-<p><strong>Explainability.</strong> Grad-CAM produces class-discriminative localization maps from a trained
-classifier without extra labels, and is widely used to confirm that medical-imaging models
-focus on clinically relevant regions rather than artifacts [7].</p>
+data closes the gap [4]. To interpret model behavior, Grad-CAM produces class-discriminative
+localization maps from a trained classifier without extra labels, and is widely used to
+confirm that medical-imaging models focus on clinically relevant regions rather than artifacts
+[7].</p>
 <hr />
 <h2>III. Methods</h2>
 <h3>A. Datasets and Labels</h3>
 <p>HAM10000 is used for training/validation and DDI [5] as a held-out test set — a
 deliberate train/test domain shift (dermoscopic → clinical photography). Labels are binarized
-to <strong>Benign</strong> vs <strong>Malignant</strong> (HAM10000 <code>dx == mel</code> → Malignant; DDI <code>malignant</code> field). DDI
+to Benign vs Malignant (HAM10000 <code>dx == mel</code> → Malignant; DDI <code>malignant</code> field). DDI
 Fitzpatrick codes are mapped to three groups: Light (FST I–II), Medium (FST III–IV), and Dark
 (FST V–VI). Table I summarizes the splits.</p>
 <div class="tablewrap"><p><strong>TABLE I. Dataset Summary</strong></p><table>
@@ -162,7 +158,7 @@ Fitzpatrick codes are mapped to three groups: Light (FST I–II), Medium (FST II
 </table></div>
 <p>Images are converted to RGB, resized to 224×224, and normalized with ImageNet statistics
 (mean [0.485, 0.456, 0.406], std [0.229, 0.224, 0.225]). The HAM10000 train/validation split
-is a stratified 80/20 split performed by <strong><code>lesion_id</code></strong> so that no lesion appears in both
+is a stratified 80/20 split performed by <code>lesion_id</code> so that no lesion appears in both
 splits (preventing leakage), with seed 42.</p>
 <h3>B. Model and Training</h3>
 <p>The classifier is EfficientNet-B0 [8], initialized with weights pretrained on the ImageNet dataset [9], which enables transfer learning by leveraging visual features such as edges, textures, shapes, and color patterns learned from millions of labeled natural images. The final classification layer was then replaced with a two-class head, Linear(1280 → 2), and fine-tuned for benign-versus-malignant skin lesion classification (Fig. 1). Only the head is new; the backbone
@@ -173,7 +169,7 @@ F1, and training early-stops when validation F1 stops improving.</p>
 <figure class="fig"><img alt="Model architecture: preprocessing → EfficientNet-B0 backbone → 2-class head, with a Grad-CAM branch on the last convolutional block." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/architecture.png" /><figcaption><strong>Fig. 1.</strong> End-to-end pipeline: image preprocessing, EfficientNet-B0 backbone, two-class
 head, and the Grad-CAM branch on the final convolutional block.</figcaption></figure>
 <h3>C. Skin-Tone-Aware Augmentation</h3>
-<p>Augmentation is applied <strong>to the training set only</strong> in the augmented experiment, before
+<p>Augmentation is applied to the training set only in the augmented experiment, before
 normalization, in random order: <code>RandomHorizontalFlip(0.5)</code>, <code>RandomRotation(±20°)</code>, and
 <code>ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1)</code>. The color operations
 sample factors from uniform ranges and transform the image as follows, where <code>in</code>/<code>out</code> are
@@ -197,8 +193,8 @@ global-average-pooled to channel weights $\alpha_k^c$, combined, and rectified:<
 over the input as $(1-\alpha)\,\text{image} + \alpha\,\text{jet}(L^c)$ with $\alpha=0.4$.</p>
 <hr />
 <h2>IV. Experimental Setup</h2>
-<p>Two experiments are run with identical evaluation: <strong>baseline</strong> (preprocessing-only training)
-and <strong>augmented</strong> (Section III-C). Both are trained on HAM10000 and evaluated on all 656 DDI
+<p>Two experiments are run with identical evaluation: baseline (preprocessing-only training)
+and augmented (Section III-C). Both are trained on HAM10000 and evaluated on all 656 DDI
 images. Hyperparameters: batch size 32, Adam learning rate 1×10⁻⁴, seed 42, up to 15 epochs
 with early stopping on validation F1. With batch size 32, one epoch is 251 training batches
 (8012 images) and 63 validation batches (2003 images). Metrics are Accuracy, Precision,
@@ -254,7 +250,7 @@ confusion matrices are shown in Fig. 4 and Fig. 5; training curves in Fig. 3.</p
 <figure class="fig"><img alt="Confusion matrices on DDI for baseline and augmented models." src="file:///C:/Users/srahavi/OneDrive%20-%20Huron%20Consulting%20Group/Desktop/IRL/repos/melanoma_soc/artifacts/figures/confusion_matrices.png" /><figcaption><strong>Fig. 5.</strong> Confusion matrices (DDI) for the baseline and augmented models.</figcaption></figure>
 <h3>B. Fairness Across Skin Tones</h3>
 <p>Per-group results are reported in Table III, and the fairness gaps in Table IV. Augmentation
-raised Light and Medium accuracy but <strong>lowered</strong> Dark accuracy (0.778 → 0.725). As a result,
+raised Light and Medium accuracy but lowered Dark accuracy (0.778 → 0.725). As a result,
 the overall max–min spread narrowed (0.077 → 0.049), but the primary Light–Dark gap did not
 improve and in fact became positive (−0.013 → +0.049). Per-group recall/F1 (Table III) did
 rise for every group, consistent with the overall sensitivity gain.</p>
@@ -371,14 +367,14 @@ as a near-constant "benign" predictor (perfect precision, negligible recall), wh
 accuracy on a benign-heavy test set while being clinically useless; augmentation produced a
 more balanced operating point.</p>
 <p>The fairness picture is mixed. The max–min accuracy spread narrowed, but the targeted
-Light–Dark accuracy gap did <strong>not</strong> improve — Dark-group accuracy actually fell even though
+Light–Dark accuracy gap did not improve — Dark-group accuracy actually fell even though
 Dark-group recall and F1 increased. This apparent tension is a consequence of the benign-heavy
 class balance: accuracy and sensitivity move differently as the decision threshold shifts. The
 most plausible explanation is that photometric jitter changes pixel intensities but not lesion
 morphology or the characteristics of real skin-of-color clinical photography, so it is a weak
 proxy for genuine diversity.</p>
 <p>This aligns with the DDI study [4], where the large fairness gains came specifically from
-<strong>fine-tuning on diverse DDI data</strong> (HAM10000 Light/Dark ROC-AUC rising to ≈0.77/0.78), not
+fine-tuning on diverse DDI data (HAM10000 Light/Dark ROC-AUC rising to ≈0.77/0.78), not
 from color augmentation of a non-diverse corpus. Our augmented model never trains on DDI, so
 it should not be expected to reproduce those gains. Our baseline DDI ROC-AUC (0.554) is also
 lower than the study's HAM10000 baseline (0.67), attributable to a different architecture
@@ -437,19 +433,18 @@ decisions.</p>
 <p>This project asked whether skin-tone-aware image augmentation can improve melanoma
 classification across diverse skin tones. Using EfficientNet-B0 trained on HAM10000 and
 evaluated on the skin-tone-labeled DDI benchmark, augmentation improved overall malignant
-detection (F1 and ROC-AUC) and narrowed the max–min per-group accuracy spread, but did <strong>not</strong>
+detection (F1 and ROC-AUC) and narrowed the max–min per-group accuracy spread, but did not
 reduce the targeted Light–Dark gap. The hypothesis is therefore only partially supported:
 photometric augmentation helps robustness but is insufficient, on its own, to close skin-tone
 fairness gaps — consistent with prior findings that representative data is the key lever [4].</p>
 <p>Future work could fine-tune on genuinely diverse data (as in [4]), apply stronger augmentation techniques, run multiple random seeds with confidence intervals, train on the full dataset with GPU acceleration, and investigate domain-adaptation approaches such as Deep CORAL [10] to reduce the distribution shift between HAM10000 and DDI. Fairness-aware optimization methods such as GroupDRO [11] may also be explored if skin-tone labels become available during training. Another promising direction is adopting datasets with pixel-level lesion masks, such as ISIC and PH2, to support segmentation-based approaches rather than Grad-CAM-only localization [12].</p>
 <hr />
 <h2>Acknowledgment</h2>
-<p>This was a solo project with no additional team members. The author used <strong>Claude (Anthropic)</strong>
-as an AI coding assistant for implementation, debugging, and drafting; <strong>GitHub</strong> for version
-control; <strong>PyTorch/torchvision</strong> for the model, training, and augmentation (EfficientNet-B0 with
-ImageNet weights); <strong>scikit-learn</strong> for evaluation metrics; <strong>FastAPI/Uvicorn</strong> and
-<strong>React/Vite</strong> for the web application; and <strong>matplotlib/pandas</strong> for figures and tables. The
-work uses the publicly available HAM10000 [6] and DDI [5] datasets.</p>
+<p>This was a solo project with no additional team members. The author used Claude (Anthropic)
+as an AI coding assistant for implementation, debugging, and drafting; GitHub for version
+control; PyTorch/torchvision for the model, training, and augmentation (EfficientNet-B0 with
+ImageNet weights); scikit-learn for evaluation metrics; and matplotlib/pandas for figures and
+tables. The work uses the publicly available HAM10000 [6] and DDI [5] datasets.</p>
 <hr />
 <h2>References</h2>
 <p>[1] H. Li, Y. Pan, J. Zhao, and L. Zhang, "Skin disease diagnosis with deep learning: a review," 2020. [Online]. Available: https://arxiv.org/abs/2011.05627.</p>
